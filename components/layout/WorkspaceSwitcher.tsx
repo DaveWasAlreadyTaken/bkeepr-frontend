@@ -19,7 +19,9 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { usePathname, useRouter } from "next/navigation";
-import { useAuthStore } from "@/app/stores/auth.store";
+import { useAuthStore, type Workspace } from "@/app/stores/auth.store";
+
+const EMPTY_WORKSPACES: Workspace[] = [];
 
 export function WorkspaceSwitcher() {
   const { isMobile } = useSidebar();
@@ -32,7 +34,7 @@ export function WorkspaceSwitcher() {
   const currentWorkspaceId = workspaceIdMatch ? workspaceIdMatch[1] : "";
 
   // Hole die Workspaces aus dem Auth Store
-  const workspaces = user?.workspaces || [];
+  const workspaces = user?.workspaces ?? EMPTY_WORKSPACES;
 
   // Aktuelle Rolle direkt aus dem Auth-Store
   const currentRole = currentWorkspaceId
