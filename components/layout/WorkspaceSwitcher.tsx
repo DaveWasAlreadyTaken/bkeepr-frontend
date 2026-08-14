@@ -39,44 +39,23 @@ export function WorkspaceSwitcher() {
     ? getWorkspaceRole(currentWorkspaceId)
     : null;
 
-  // Finde den aktiven Workspace anhand der ID aus der URL
-  const [activeWorkspace, setActiveWorkspace] = React.useState<{
+  // Finde den aktiven Workspace anhand der ID aus der URL, oder falle auf
+  // den ersten Workspace zurück, wenn keiner zur URL passt.
+  const activeWorkspace = React.useMemo<{
     id: string;
     name: string;
     role: string;
     logo?: React.ElementType | string;
-  } | null>(null);
+  } | null>(() => {
+    if (workspaces.length === 0) return null;
 
-  // Aktualisiere den aktiven Workspace, wenn sich die URL ändert oder wenn der User geladen wird
-  React.useEffect(() => {
-    if (workspaces.length > 0 && currentWorkspaceId) {
-      const workspace = workspaces.find((ws) => ws.id === currentWorkspaceId);
+    const workspace =
+      workspaces.find((ws) => ws.id === currentWorkspaceId) ?? workspaces[0];
 
-      if (workspace) {
-        // Behalte das Logo bei, wenn es bereits gesetzt ist
-        const currentLogo = activeWorkspace?.logo || Store;
+    // WICHTIG: Verwende immer die Rolle aus dem Auth-Store
+    const role = getWorkspaceRole(workspace.id) || workspace.role;
 
-        // WICHTIG: Verwende immer die Rolle aus dem Auth-Store
-        const role = getWorkspaceRole(currentWorkspaceId) || workspace.role;
-
-        setActiveWorkspace({
-          ...workspace,
-          role,
-          logo: currentLogo,
-        });
-      } else if (workspaces.length > 0) {
-        // Wenn kein Workspace gefunden wurde, nehme den ersten aus der Liste
-        const firstWorkspace = workspaces[0];
-        const firstWorkspaceRole =
-          getWorkspaceRole(firstWorkspace.id) || firstWorkspace.role;
-
-        setActiveWorkspace({
-          ...firstWorkspace,
-          role: firstWorkspaceRole,
-          logo: Store,
-        });
-      }
-    }
+    return { ...workspace, role, logo: Store };
   }, [currentWorkspaceId, workspaces, getWorkspaceRole]);
 
   // Wechsle zu einem anderen Workspace

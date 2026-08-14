@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -27,23 +27,31 @@ export function InviteUserDialog({
   workspaceId,
   onInviteSuccess,
 }: InviteUserDialogProps) {
+  return (
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+      <InviteUserDialogContent
+        key={isOpen ? `open-${email}` : "closed"}
+        onOpenChange={onOpenChange}
+        email={email}
+        workspaceId={workspaceId}
+        onInviteSuccess={onInviteSuccess}
+      />
+    </Dialog>
+  );
+}
+
+function InviteUserDialogContent({
+  onOpenChange,
+  email = "",
+  workspaceId,
+  onInviteSuccess,
+}: Omit<InviteUserDialogProps, "isOpen">) {
   const [inviteData, setInviteData] = useState({
     email: email,
     firstName: "",
     lastName: "",
   });
   const [isLoading, setIsLoading] = useState(false);
-
-  // Formular zurücksetzen, wenn sich der Dialog öffnet oder die E-Mail ändert
-  useEffect(() => {
-    if (isOpen) {
-      setInviteData({
-        email: email,
-        firstName: "",
-        lastName: "",
-      });
-    }
-  }, [isOpen, email]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,78 +87,76 @@ export function InviteUserDialog({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Benutzer einladen</DialogTitle>
-        </DialogHeader>
-        <form onSubmit={handleSubmit}>
-          <div className="space-y-4">
-            <div>
-              <label
-                htmlFor="email"
-                className="text-sm font-medium text-gray-700"
-              >
-                E-Mail-Adresse
-              </label>
-              <Input
-                id="email"
-                type="email"
-                value={inviteData.email}
-                onChange={(e) =>
-                  setInviteData({ ...inviteData, email: e.target.value })
-                }
-                required
-                disabled={!!email}
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="firstName"
-                className="text-sm font-medium text-gray-700"
-              >
-                Vorname
-              </label>
-              <Input
-                id="firstName"
-                value={inviteData.firstName}
-                onChange={(e) =>
-                  setInviteData({ ...inviteData, firstName: e.target.value })
-                }
-                required
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="lastName"
-                className="text-sm font-medium text-gray-700"
-              >
-                Nachname
-              </label>
-              <Input
-                id="lastName"
-                value={inviteData.lastName}
-                onChange={(e) =>
-                  setInviteData({ ...inviteData, lastName: e.target.value })
-                }
-                required
-              />
-            </div>
+    <DialogContent>
+      <DialogHeader>
+        <DialogTitle>Benutzer einladen</DialogTitle>
+      </DialogHeader>
+      <form onSubmit={handleSubmit}>
+        <div className="space-y-4">
+          <div>
+            <label
+              htmlFor="email"
+              className="text-sm font-medium text-gray-700"
+            >
+              E-Mail-Adresse
+            </label>
+            <Input
+              id="email"
+              type="email"
+              value={inviteData.email}
+              onChange={(e) =>
+                setInviteData({ ...inviteData, email: e.target.value })
+              }
+              required
+              disabled={!!email}
+            />
           </div>
-          <DialogFooter className="mt-6">
-            <Button type="submit" disabled={isLoading}>
-              {isLoading ? (
-                <>
-                  Wird eingeladen
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                </>
-              ) : (
-                "Einladen"
-              )}
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+          <div>
+            <label
+              htmlFor="firstName"
+              className="text-sm font-medium text-gray-700"
+            >
+              Vorname
+            </label>
+            <Input
+              id="firstName"
+              value={inviteData.firstName}
+              onChange={(e) =>
+                setInviteData({ ...inviteData, firstName: e.target.value })
+              }
+              required
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="lastName"
+              className="text-sm font-medium text-gray-700"
+            >
+              Nachname
+            </label>
+            <Input
+              id="lastName"
+              value={inviteData.lastName}
+              onChange={(e) =>
+                setInviteData({ ...inviteData, lastName: e.target.value })
+              }
+              required
+            />
+          </div>
+        </div>
+        <DialogFooter className="mt-6">
+          <Button type="submit" disabled={isLoading}>
+            {isLoading ? (
+              <>
+                Wird eingeladen
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              </>
+            ) : (
+              "Einladen"
+            )}
+          </Button>
+        </DialogFooter>
+      </form>
+    </DialogContent>
   );
 }

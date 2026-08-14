@@ -168,13 +168,14 @@ export function JoinRequestsDropdown({
   }, [workspaceId]);
 
   // Lade die vollständigen Daten nur beim Öffnen des Dropdowns
-  useEffect(() => {
-    if (isOpen) {
+  const handleOpenChange = (nextOpen: boolean) => {
+    setIsOpen(nextOpen);
+    if (nextOpen) {
       // Bei jedem Öffnen des Dropdowns zurück zur ersten Seite
       setCurrentPage(1);
       fetchJoinRequests(1, false);
     }
-  }, [isOpen, workspaceId]);
+  };
 
   const handleApprove = async (requestId: string) => {
     setProcessingRequests((prev) => ({ ...prev, [requestId]: true }));
@@ -269,7 +270,7 @@ export function JoinRequestsDropdown({
   };
 
   return (
-    <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+    <DropdownMenu open={isOpen} onOpenChange={handleOpenChange}>
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"

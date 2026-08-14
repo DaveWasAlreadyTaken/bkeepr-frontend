@@ -94,11 +94,6 @@ const WorkspaceDetailPage = () => {
     return false;
   };
 
-  useEffect(() => {
-    fetchWorkspace();
-    fetchWorkspaceUsers(workspaceUsersResponse.meta.page);
-  }, [workspaceId]);
-
   /**
    * Lädt den Workspace vom Server
    */
@@ -159,6 +154,11 @@ const WorkspaceDetailPage = () => {
       setIsLoadingUsers(false);
     }
   };
+
+  useEffect(() => {
+    fetchWorkspace();
+    fetchWorkspaceUsers(workspaceUsersResponse.meta.page);
+  }, [workspaceId]);
 
   /**
    * Speichert Änderungen am Workspace

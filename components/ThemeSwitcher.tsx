@@ -3,18 +3,14 @@
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import { Moon, Sun } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useHasHydrated } from "@/hooks/use-has-hydrated";
 
 export function ThemeSwitcher() {
   const { resolvedTheme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+  const hasHydrated = useHasHydrated();
 
   // Verhindert Hydration-Fehler, indem wir warten, bis die Komponente client-seitig gemounted ist
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
+  if (!hasHydrated) {
     return null;
   }
 

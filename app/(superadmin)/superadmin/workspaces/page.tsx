@@ -34,10 +34,6 @@ const WorkspacesPage = () => {
     isPrivate: false,
   });
 
-  React.useEffect(() => {
-    fetchWorkspaces(workspacesResponse.meta.page);
-  }, []);
-
   /**
    * Lädt alle Workspaces vom Server
    */
@@ -58,6 +54,10 @@ const WorkspacesPage = () => {
       setIsLoading(false);
     }
   };
+
+  React.useEffect(() => {
+    fetchWorkspaces(workspacesResponse.meta.page);
+  }, []);
 
   /**
    * Verarbeitet das Formular zum Erstellen eines Workspaces

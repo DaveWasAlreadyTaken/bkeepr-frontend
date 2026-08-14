@@ -61,9 +61,9 @@ export default function ResetPasswordPage() {
 function ResetPasswordContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [token, setToken] = useState<string | null>(null);
+  const token = searchParams.get("token");
+  const isTokenValid = token !== null;
   const [isLoading, setIsLoading] = useState(false);
-  const [isTokenValid, setIsTokenValid] = useState<boolean | null>(null);
   const [isResetComplete, setIsResetComplete] = useState(false);
   const setUser = useAuthStore((state) => state.setUser);
 
@@ -76,20 +76,15 @@ function ResetPasswordContent() {
     },
   });
 
-  // Token aus URL extrahieren
+  // Meldung, wenn der Link keinen Token enthält
   useEffect(() => {
-    const tokenFromUrl = searchParams.get("token");
-    if (tokenFromUrl) {
-      setToken(tokenFromUrl);
-      setIsTokenValid(true);
-    } else {
-      setIsTokenValid(false);
+    if (!isTokenValid) {
       toast.error("Fehler", {
         description:
           "Der Link ist ungültig oder abgelaufen. Bitte fordere einen neuen Link an.",
       });
     }
-  }, [searchParams]);
+  }, [isTokenValid]);
 
   // Formularverarbeitung
   const onSubmit = async (data: ResetPasswordFormData) => {
@@ -139,7 +134,7 @@ function ResetPasswordContent() {
   };
 
   // Wenn der Token ungültig ist
-  if (isTokenValid === false) {
+  if (!isTokenValid) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12">
         <Card className="w-full max-w-md">
@@ -204,28 +199,6 @@ function ResetPasswordContent() {
             <Button onClick={() => router.push("/")} className="w-full">
               Zur Startseite
             </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  // Wenn der Token noch überprüft wird
-  if (isTokenValid === null) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12">
-        <Card className="w-full max-w-md">
-          <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl font-bold">
-              Passwort zurücksetzen
-            </CardTitle>
-            <CardDescription>Wir überprüfen deinen Link...</CardDescription>
-          </CardHeader>
-          <CardContent className="flex flex-col items-center justify-center py-8">
-            <Loader2 className="size-12 animate-spin text-primary" />
-            <p className="mt-4 text-center text-sm text-muted-foreground">
-              Bitte warte einen Moment...
-            </p>
           </CardContent>
         </Card>
       </div>

@@ -1,19 +1,19 @@
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
+
+const emptySubscribe = () => () => {};
 
 /**
- * True only after the first client-side effect ran. Persisted zustand state
+ * True only after the first client-side render. Persisted zustand state
  * (localStorage) is unavailable during SSR, so anything gated on it renders
  * differently on the server than on the client — a hydration mismatch.
  * Rendering the "not yet hydrated" branch on both the server AND the initial
- * client pass keeps the first paint identical; the real content appears a
- * tick later via a normal state update, not during hydration reconciliation.
+ * client pass keeps the first paint identical; the real content appears once
+ * React re-renders with the client snapshot.
  */
 export function useHasHydrated() {
-  const [hasHydrated, setHasHydrated] = useState(false);
-
-  useEffect(() => {
-    setHasHydrated(true);
-  }, []);
-
-  return hasHydrated;
+  return useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false,
+  );
 }

@@ -15,13 +15,7 @@ import {
   TrendingUp,
   Video,
 } from "lucide-react";
-import {
-  Area,
-  ComposedChart,
-  Line,
-  ReferenceLine,
-  XAxis,
-} from "recharts";
+import { Area, ComposedChart, Line, ReferenceLine, XAxis } from "recharts";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -115,7 +109,9 @@ export default function WorkspacePage() {
       setLoadState("ready");
     } catch (error) {
       setErrorMessage(
-        error instanceof ApiException ? error.error.message : "Unbekannter Fehler",
+        error instanceof ApiException
+          ? error.error.message
+          : "Unbekannter Fehler",
       );
       setLoadState("error");
     }
@@ -127,7 +123,6 @@ export default function WorkspacePage() {
 
   useEffect(() => {
     if (!activeDeviceId) {
-      setDetail(null);
       return;
     }
     let cancelled = false;
@@ -144,12 +139,20 @@ export default function WorkspacePage() {
     };
   }, [workspaceId, activeDeviceId]);
 
+  const effectiveDetail = activeDeviceId ? detail : null;
+
   if (loadState === "loading") {
     return <DashboardSkeleton />;
   }
 
   if (loadState === "error") {
-    return <ErrorState workspaceId={workspaceId} message={errorMessage} onRetry={load} />;
+    return (
+      <ErrorState
+        workspaceId={workspaceId}
+        message={errorMessage}
+        onRetry={load}
+      />
+    );
   }
 
   const device = devices.find((d) => d.id === activeDeviceId) ?? devices[0];
@@ -222,8 +225,8 @@ export default function WorkspacePage() {
 
       {showVollzustand ? (
         <VollzustandView />
-      ) : detail ? (
-        <LeerzustandView detail={detail} />
+      ) : effectiveDetail ? (
+        <LeerzustandView detail={effectiveDetail} />
       ) : (
         <DetailSkeleton />
       )}
@@ -234,6 +237,7 @@ export default function WorkspacePage() {
 function LeerzustandView({ detail }: { detail: DeviceDetail }) {
   const hb = detail.latestHeartbeat;
   const [clipsGuideOpen, setClipsGuideOpen] = useState(false);
+  const [now] = useState(() => Date.now());
 
   const sun = useMemo(
     () =>
@@ -260,7 +264,7 @@ function LeerzustandView({ detail }: { detail: DeviceDetail }) {
             day: "2-digit",
             month: "long",
           })}
-          hint={`seit ${Math.max(1, Math.round((Date.now() - new Date(detail.createdAt).getTime()) / 86400000))} Tagen`}
+          hint={`seit ${Math.max(1, Math.round((now - new Date(detail.createdAt).getTime()) / 86400000))} Tagen`}
         />
         <StatCard
           icon={<Database className="h-4 w-4" />}
@@ -277,12 +281,20 @@ function LeerzustandView({ detail }: { detail: DeviceDetail }) {
               "—"
             )
           }
-          hint={diskFreeGb != null ? `${diskFreeGb.toFixed(0)} GB frei` : "noch kein Heartbeat"}
+          hint={
+            diskFreeGb != null
+              ? `${diskFreeGb.toFixed(0)} GB frei`
+              : "noch kein Heartbeat"
+          }
         />
         <StatCard
           icon={<Video className="h-4 w-4" />}
           label="Aufgezeichnete Clips"
-          value={hb?.clipsRecorded != null ? hb.clipsRecorded.toLocaleString("de-DE") : "—"}
+          value={
+            hb?.clipsRecorded != null
+              ? hb.clipsRecorded.toLocaleString("de-DE")
+              : "—"
+          }
           hint={
             <span title={formatAbsolute(detail.lastHeartbeatAt)}>
               Heartbeat {formatRelative(detail.lastHeartbeatAt)}
@@ -305,7 +317,13 @@ function LeerzustandView({ detail }: { detail: DeviceDetail }) {
           value={hb?.lastRecordingAt ? formatRelative(hb.lastRecordingAt) : "—"}
           hint={
             hb?.lastRecordingAt ? (
-              <span className={hb.lastRecordingUsable ? "text-success" : "text-warning-strong"}>
+              <span
+                className={
+                  hb.lastRecordingUsable
+                    ? "text-success"
+                    : "text-warning-strong"
+                }
+              >
                 {hb.lastRecordingUsable ? "brauchbar" : "unbrauchbar"} ·{" "}
                 <span className="font-mono text-muted-foreground">
                   {formatAbsolute(hb.lastRecordingAt)}
@@ -330,9 +348,9 @@ function LeerzustandView({ detail }: { detail: DeviceDetail }) {
               </h2>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                 Die Kamera zeichnet auf, aber der Detektor, der Bienen zählt,
-                läuft noch nicht. Sobald er die Clips auswertet, erscheinen
-                hier Ein- und Ausflüge, Pollenanteil und der Vergleich zum
-                eigenen 7-Tage-Median.
+                läuft noch nicht. Sobald er die Clips auswertet, erscheinen hier
+                Ein- und Ausflüge, Pollenanteil und der Vergleich zum eigenen
+                7-Tage-Median.
               </p>
             </div>
             <div className="flex flex-col gap-3">
@@ -376,9 +394,15 @@ function LeerzustandView({ detail }: { detail: DeviceDetail }) {
               {sun && (
                 <div className="flex items-center gap-1.5 whitespace-nowrap text-xs text-muted-foreground">
                   <Sunrise className="h-3.5 w-3.5" />
-                  {sun.sunrise.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" })}
+                  {sun.sunrise.toLocaleTimeString("de-DE", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
                   <Sunset className="ml-1.5 h-3.5 w-3.5" />
-                  {sun.sunset.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" })}
+                  {sun.sunset.toLocaleTimeString("de-DE", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
                 </div>
               )}
             </div>
@@ -489,8 +513,18 @@ function VollzustandView() {
                 interval={5}
                 className="font-mono text-[10px]"
               />
-              <ReferenceLine x="05" stroke="hsl(var(--warning))" strokeDasharray="3 4" strokeOpacity={0.5} />
-              <ReferenceLine x="19" stroke="hsl(var(--warning))" strokeDasharray="3 4" strokeOpacity={0.5} />
+              <ReferenceLine
+                x="05"
+                stroke="hsl(var(--warning))"
+                strokeDasharray="3 4"
+                strokeOpacity={0.5}
+              />
+              <ReferenceLine
+                x="19"
+                stroke="hsl(var(--warning))"
+                strokeDasharray="3 4"
+                strokeOpacity={0.5}
+              />
               <ChartTooltip content={<ChartTooltipContent />} />
               <Area
                 dataKey="temp"
@@ -639,7 +673,8 @@ function ErrorState({
       <div>
         <h2 className="text-lg font-semibold">Daten nicht erreichbar</h2>
         <p className="mx-auto mt-2 max-w-sm text-sm text-muted-foreground">
-          {message || "Der Server antwortet gerade nicht. Deine Aufzeichnung läuft davon unberührt weiter — es fehlt nur die Anzeige."}
+          {message ||
+            "Der Server antwortet gerade nicht. Deine Aufzeichnung läuft davon unberührt weiter — es fehlt nur die Anzeige."}
         </p>
       </div>
       <div className="rounded-md bg-muted px-3 py-1.5 font-mono text-xs text-muted-foreground">

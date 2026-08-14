@@ -60,7 +60,7 @@ export function NotificationsDropdown() {
     } finally {
       setIsInitialLoading(false);
     }
-  }, [user?.id]);
+  }, [user]);
 
   const fetchNotifications = useCallback(
     async (page: number = 1, append: boolean = false) => {
@@ -108,7 +108,7 @@ export function NotificationsDropdown() {
         }
       }
     },
-    [user?.id, limit],
+    [user, limit],
   );
 
   const loadMoreNotifications = useCallback(() => {
@@ -151,13 +151,14 @@ export function NotificationsDropdown() {
   ]);
 
   // Lade die vollständigen Daten nur beim Öffnen des Dropdowns
-  useEffect(() => {
-    if (isOpen && user?.id) {
+  const handleOpenChange = (nextOpen: boolean) => {
+    setIsOpen(nextOpen);
+    if (nextOpen && user?.id) {
       // Bei jedem Öffnen des Dropdowns zurück zur ersten Seite
       setCurrentPage(1);
       fetchNotifications(1, false);
     }
-  }, [isOpen, user?.id, fetchNotifications]);
+  };
 
   const handleMarkAsRead = async (notificationId: string) => {
     setProcessingNotifications((prev) => ({ ...prev, [notificationId]: true }));
@@ -224,7 +225,7 @@ export function NotificationsDropdown() {
   };
 
   return (
-    <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+    <DropdownMenu open={isOpen} onOpenChange={handleOpenChange}>
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"

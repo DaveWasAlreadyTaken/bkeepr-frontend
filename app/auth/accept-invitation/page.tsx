@@ -62,9 +62,9 @@ export default function AcceptInvitationPage() {
 function AcceptInvitationContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [token, setToken] = useState<string | null>(null);
+  const token = searchParams.get("token");
+  const isTokenValid = token !== null;
   const [isLoading, setIsLoading] = useState(false);
-  const [isTokenValid, setIsTokenValid] = useState<boolean | null>(null);
   const [isAcceptComplete, setIsAcceptComplete] = useState(false);
   const setUser = useAuthStore((state) => state.setUser);
 
@@ -77,20 +77,15 @@ function AcceptInvitationContent() {
     },
   });
 
-  // Token aus URL extrahieren
+  // Meldung, wenn der Link keinen Token enthält
   useEffect(() => {
-    const tokenFromUrl = searchParams.get("token");
-    if (tokenFromUrl) {
-      setToken(tokenFromUrl);
-      setIsTokenValid(true);
-    } else {
-      setIsTokenValid(false);
+    if (!isTokenValid) {
       toast.error("Fehler", {
         description:
           "Der Einladungslink ist ungültig oder abgelaufen. Bitte kontaktiere den Administrator für einen neuen Link.",
       });
     }
-  }, [searchParams]);
+  }, [isTokenValid]);
 
   // Formularverarbeitung
   const onSubmit = async (data: AcceptInvitationFormData) => {
@@ -155,7 +150,7 @@ function AcceptInvitationContent() {
   };
 
   // Wenn der Token ungültig ist
-  if (isTokenValid === false) {
+  if (!isTokenValid) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12">
         <Card className="w-full max-w-md">
@@ -227,28 +222,6 @@ function AcceptInvitationContent() {
             >
               Jetzt zur Anwendung
             </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  // Wenn der Token noch überprüft wird
-  if (isTokenValid === null) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12">
-        <Card className="w-full max-w-md">
-          <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl font-bold">
-              Einladung annehmen
-            </CardTitle>
-            <CardDescription>Wir überprüfen deinen Link...</CardDescription>
-          </CardHeader>
-          <CardContent className="flex flex-col items-center justify-center py-8">
-            <Loader2 className="size-12 animate-spin text-primary" />
-            <p className="mt-4 text-center text-sm text-muted-foreground">
-              Bitte warte einen Moment...
-            </p>
           </CardContent>
         </Card>
       </div>

@@ -52,10 +52,6 @@ const UsersPage = () => {
     roleIds: [],
   });
 
-  React.useEffect(() => {
-    fetchUsers(userResponse.meta.page);
-  }, []);
-
   /**
    * Lädt alle Benutzer vom Server
    */
@@ -93,6 +89,10 @@ const UsersPage = () => {
       setIsLoading(false);
     }
   };
+
+  React.useEffect(() => {
+    fetchUsers(userResponse.meta.page);
+  }, []);
 
   /**
    * Verarbeitet das Formular zum Erstellen oder Aktualisieren eines Benutzers

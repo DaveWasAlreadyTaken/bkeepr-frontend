@@ -99,6 +99,31 @@ export function WorkspaceUserCombobox({
     }
   }, [workspaceId, open]);
 
+  // Lade alle verfügbaren Benutzer
+  const loadAllUsers = async () => {
+    // Wenn kein Superadmin, dann keine Benutzer ohne Suche anzeigen
+    if (!isSuperAdmin) {
+      setUsers([]);
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const response = await userService.getAllUsers(1, 5);
+      // Filtere Benutzer, die bereits im Workspace sind
+      const filteredResults =
+        response?.data?.filter(
+          (user) => !currentWorkspaceUsers.includes(user.id),
+        ) || [];
+      setUsers(filteredResults);
+    } catch (error) {
+      console.error("Fehler beim Laden der Benutzer:", error);
+      setUsers([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   // Benutzersuche wenn Suchtext eingegeben wird
   const searchUsers = React.useCallback(
     async (query: string) => {
@@ -139,31 +164,6 @@ export function WorkspaceUserCombobox({
     },
     [workspaceId, currentWorkspaceUsers, isSuperAdmin],
   );
-
-  // Lade alle verfügbaren Benutzer
-  const loadAllUsers = async () => {
-    // Wenn kein Superadmin, dann keine Benutzer ohne Suche anzeigen
-    if (!isSuperAdmin) {
-      setUsers([]);
-      return;
-    }
-
-    try {
-      setIsLoading(true);
-      const response = await userService.getAllUsers(1, 5);
-      // Filtere Benutzer, die bereits im Workspace sind
-      const filteredResults =
-        response?.data?.filter(
-          (user) => !currentWorkspaceUsers.includes(user.id),
-        ) || [];
-      setUsers(filteredResults);
-    } catch (error) {
-      console.error("Fehler beim Laden der Benutzer:", error);
-      setUsers([]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   // Debounce für die Suche
   React.useEffect(() => {
