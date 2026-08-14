@@ -171,7 +171,7 @@ class AuthService {
           code: "NO_TOKEN_RECEIVED",
         });
       }
-
+ 
       return response.data;
     } catch (error) {
       // ApiException durchreichen
@@ -398,7 +398,7 @@ class AuthService {
    */
   public initiateGoogleLogin(): void {
     if (typeof window === "undefined") return;
-    window.location.href = `${API_CONFIG.BASE_URL}/auth/google`;
+    window.location.href = `${API_CONFIG.BASE_URL}/api/auth/google`;
   }
 
   /**
