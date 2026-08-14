@@ -1,5 +1,4 @@
 import * as React from "react";
-import Image from "next/image";
 
 import {
   Sidebar,
@@ -14,8 +13,8 @@ import {
 } from "@/components/ui/sidebar";
 import { GalleryVerticalEndIcon, Users } from "lucide-react";
 import { SidebarMenuActiveBtn } from "./SidebarMenuActiveBtn";
-import elephantIcon from "@/public/logos/elephant-icon.png";
-// This is sample data.
+import { BKeeprLogo } from "./BKeeprLogo";
+
 const data = {
   navMain: [
     {
@@ -43,16 +42,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader className="mt-2">
-        <div className="flex items-center gap-4">
-          <Image
-            src={elephantIcon}
-            alt="Elephant Bookings Logo"
-            width={32}
-            height={32}
-            className="h-8 w-8"
-          />
-          <span className="text-nowrap font-semibold">Elephant Bookings</span>
-        </div>
+        <BKeeprLogo />
       </SidebarHeader>
       <SidebarContent>
         {data.navMain.map((item) => (

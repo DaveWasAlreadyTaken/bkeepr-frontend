@@ -9,6 +9,10 @@ export default {
   ],
   theme: {
   	extend: {
+  		fontFamily: {
+  			sans: ["var(--font-geist-sans)", "system-ui", "sans-serif"],
+  			mono: ["var(--font-geist-mono)", "ui-monospace", "monospace"]
+  		},
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
@@ -22,7 +26,8 @@ export default {
   			},
   			primary: {
   				DEFAULT: 'hsl(var(--primary))',
-  				foreground: 'hsl(var(--primary-foreground))'
+  				foreground: 'hsl(var(--primary-foreground))',
+  				strong: 'hsl(var(--primary-strong))'
   			},
   			secondary: {
   				DEFAULT: 'hsl(var(--secondary))',
@@ -40,6 +45,20 @@ export default {
   				DEFAULT: 'hsl(var(--destructive))',
   				foreground: 'hsl(var(--destructive-foreground))'
   			},
+  			warning: {
+  				DEFAULT: 'hsl(var(--warning))',
+  				foreground: 'hsl(var(--warning-foreground))',
+  				strong: 'hsl(var(--warning-strong))'
+  			},
+  			success: {
+  				DEFAULT: 'hsl(var(--success))',
+  				foreground: 'hsl(var(--success-foreground))'
+  			},
+  			beard: {
+  				DEFAULT: 'hsl(var(--beard))',
+  				foreground: 'hsl(var(--beard-foreground))'
+  			},
+  			weather: 'hsl(var(--weather))',
   			border: 'hsl(var(--border))',
   			input: 'hsl(var(--input))',
   			ring: 'hsl(var(--ring))',
@@ -58,9 +77,7 @@ export default {
   				accent: 'hsl(var(--sidebar-accent))',
   				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
   				border: 'hsl(var(--sidebar-border))',
-  				ring: 'hsl(var(--sidebar-ring))',
-  				'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-  				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))'
+  				ring: 'hsl(var(--sidebar-ring))'
   			}
   		},
   		borderRadius: {

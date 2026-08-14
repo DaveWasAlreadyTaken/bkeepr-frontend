@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { z } from "zod";
@@ -45,6 +45,20 @@ const resetPasswordSchema = z
 type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
 
 export default function ResetPasswordPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12">
+          <Loader2 className="size-12 animate-spin text-primary" />
+        </div>
+      }
+    >
+      <ResetPasswordContent />
+    </Suspense>
+  );
+}
+
+function ResetPasswordContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [token, setToken] = useState<string | null>(null);

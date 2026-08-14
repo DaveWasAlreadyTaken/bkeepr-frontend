@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   Card,
@@ -16,6 +16,20 @@ import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 
 export default function ConfirmEmailPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12">
+          <Loader2 className="size-12 animate-spin text-primary" />
+        </div>
+      }
+    >
+      <ConfirmEmailContent />
+    </Suspense>
+  );
+}
+
+function ConfirmEmailContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [status, setStatus] = useState<"loading" | "success" | "error">(

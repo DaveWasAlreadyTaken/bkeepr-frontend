@@ -1,12 +1,26 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuthStore } from "@/app/stores/auth.store";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
 export default function GoogleAuthCallback() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-background">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      }
+    >
+      <GoogleAuthCallbackContent />
+    </Suspense>
+  );
+}
+
+function GoogleAuthCallbackContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);

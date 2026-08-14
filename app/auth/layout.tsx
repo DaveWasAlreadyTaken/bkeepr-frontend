@@ -1,11 +1,16 @@
-import { ReactNode } from "react";
-import { Metadata } from "next";
+import type { Metadata } from "next";
+
+import { BRANDING } from "@/app/config/branding";
 
 export const metadata: Metadata = {
-  title: "Authentifizierung | Elephant Bookings",
-  description: "Anmelden oder Registrieren bei Elephant Bookings",
+  title: `Authentifizierung | ${BRANDING.appName}`,
+  description: `Anmelden oder Registrieren bei ${BRANDING.appName}`,
 };
 
-export default function AuthLayout({ children }: { children: ReactNode }) {
-  return <div className="min-h-screen bg-background">{children}</div>;
+export default function AuthLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return children;
 }

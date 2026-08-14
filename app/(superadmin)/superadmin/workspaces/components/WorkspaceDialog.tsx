@@ -18,6 +18,7 @@ import {
 import { LockKeyholeIcon, Plus } from "lucide-react";
 import { NewWorkspace } from "../types";
 import { Checkbox } from "@/components/ui/checkbox";
+import { BRANDING } from "@/app/config/branding";
 
 interface WorkspaceDialogProps {
   isOpen: boolean;
@@ -81,7 +82,7 @@ export const WorkspaceDialog = ({
             />
             <p className="text-xs text-muted-foreground">
               Die Domain wird für die URL verwendet:
-              https://mein-workspace.elephant-bookings.com
+              {`https://${newWorkspace.domain || "mein-volk"}.${BRANDING.publicDomainSuffix}`}
             </p>
           </div>
           <div className="space-y-2">

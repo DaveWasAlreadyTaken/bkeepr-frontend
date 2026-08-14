@@ -398,7 +398,7 @@ class AuthService {
    */
   public initiateGoogleLogin(): void {
     if (typeof window === "undefined") return;
-    window.location.href = `http://localhost:8080/api/auth/google`;
+    window.location.href = `http://localhost:8081/api/auth/google`;
   }
 
   /**

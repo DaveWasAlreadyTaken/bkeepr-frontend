@@ -15,6 +15,7 @@ import {
 } from "../../../../../(superadmin)/superadmin/workspaces/types";
 import { Checkbox } from "@/components/ui/checkbox";
 import { GlobeIcon, LockKeyholeIcon } from "lucide-react";
+import { BRANDING } from "@/app/config/branding";
 
 // Hilfsfunktion zum Vergleichen der Workspace-Daten
 const hasChanges = (original: Workspace, edited: NewWorkspace): boolean => {
@@ -140,7 +141,7 @@ export const WorkspaceDetails = ({
                 />
                 <p className="text-xs text-muted-foreground">
                   Die Domain wird für die URL verwendet:
-                  https://mein-workspace.elephant-bookings.com
+                  {`https://${editedWorkspace.domain || "mein-volk"}.${BRANDING.publicDomainSuffix}`}
                 </p>
               </div>
             </div>

@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/providers";
 import { cn } from "@/lib/utils";
+import { BRANDING } from "@/app/config/branding";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,8 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Elephant Bookings",
-  description: "Buchungssystem für Elephant Projects",
+  title: BRANDING.appName,
+  description: BRANDING.description,
 };
 
 export default function RootLayout({
@@ -25,14 +26,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="de" suppressHydrationWarning>
-      <body
-        className={cn(
-          "flex min-h-screen flex-col",
-          geistSans.variable,
-          geistMono.variable,
-        )}
-      >
+    <html
+      lang="de"
+      suppressHydrationWarning
+      className={cn(geistSans.variable, geistMono.variable)}
+    >
+      <body className="flex min-h-screen flex-col font-sans">
         <Providers>{children}</Providers>
       </body>
     </html>

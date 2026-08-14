@@ -1,5 +1,5 @@
 export const API_CONFIG = {
-  BASE_URL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api",
+  BASE_URL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081/api",
   DEFAULT_HEADERS: {
     "Content-Type": "application/json",
   },

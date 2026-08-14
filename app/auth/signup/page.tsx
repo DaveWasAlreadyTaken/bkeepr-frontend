@@ -13,6 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { authService } from "@/app/services/auth.service";
+import { BRANDING } from "@/app/config/branding";
 import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
 import { GoogleLoginButton } from "../login/google-button";
@@ -69,7 +70,12 @@ export default function SignupPage() {
       setIsLoading(true);
 
       // Wir entfernen confirmPassword, da es nicht an den Server gesendet werden soll
-      const { confirmPassword, ...registrationData } = formData;
+      const registrationData = {
+        email: formData.email,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        password: formData.password,
+      };
 
       await authService.register(registrationData);
       toast.success("Registrierung erfolgreich!");
@@ -89,7 +95,7 @@ export default function SignupPage() {
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold">Registrieren</CardTitle>
           <CardDescription>
-            Erstelle ein neues Konto bei Elephant Bookings
+            Erstelle ein neues Konto bei {BRANDING.appName}
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>

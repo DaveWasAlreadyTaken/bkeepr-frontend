@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { z } from "zod";
@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { BRANDING } from "@/app/config/branding";
 import {
   Form,
   FormControl,
@@ -45,6 +46,20 @@ const acceptInvitationSchema = z
 type AcceptInvitationFormData = z.infer<typeof acceptInvitationSchema>;
 
 export default function AcceptInvitationPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12">
+          <Loader2 className="size-12 animate-spin text-primary" />
+        </div>
+      }
+    >
+      <AcceptInvitationContent />
+    </Suspense>
+  );
+}
+
+function AcceptInvitationContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [token, setToken] = useState<string | null>(null);
@@ -246,7 +261,7 @@ export default function AcceptInvitationPage() {
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold">
-            Willkommen bei Elephant Bookings
+            Willkommen bei {BRANDING.appName}
           </CardTitle>
           <CardDescription>
             Bitte setze ein Passwort, um deine Einladung anzunehmen und dein

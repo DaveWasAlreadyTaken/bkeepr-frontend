@@ -1,15 +1,7 @@
 "use client";
 
 import * as React from "react";
-import {
-  FileText,
-  Calendar,
-  Users,
-  Settings,
-  Home,
-  Briefcase,
-  GalleryVerticalEndIcon,
-} from "lucide-react";
+import { Home, Settings, Video, GalleryVerticalEndIcon, Users, BellRing } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 import {
@@ -26,21 +18,26 @@ import { SidebarMenuActiveBtn } from "./SidebarMenuActiveBtn";
 import { WorkspaceSwitcher } from "./WorkspaceSwitcher";
 import { NavUser } from "./NavUser";
 import { useAuthStore } from "@/app/stores/auth.store";
+import { useHasHydrated } from "@/hooks/use-has-hydrated";
 
 export function WorkspaceSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
   const { hasWorkspaceRole, isSuperAdmin } = useAuthStore();
+  const hasHydrated = useHasHydrated();
 
-  // Extrahiere die Workspace-ID aus dem Pfad (Format: /workspace/{id}/...)
   const workspaceIdMatch = pathname.match(/\/workspace\/([^\/]+)/);
   const workspaceId = workspaceIdMatch ? workspaceIdMatch[1] : "";
 
-  // Prüfe, ob der Benutzer Admin oder Owner im aktuellen Workspace ist
+  // Rollen kommen aus dem localStorage-persistierten Auth-Store, der erst nach
+  // dem Mount verfügbar ist. Vor `hasHydrated` immer false rendern, sonst
+  // weicht die erste Client-Röhre von der SSR-Ausgabe ab (Hydration-Fehler).
   const isAdminOrOwner =
-    hasWorkspaceRole(workspaceId, "OWNER") ||
-    hasWorkspaceRole(workspaceId, "ADMIN");
+    hasHydrated &&
+    (hasWorkspaceRole(workspaceId, "OWNER") ||
+      hasWorkspaceRole(workspaceId, "ADMIN"));
+  const showSuperadmin = hasHydrated && isSuperAdmin;
 
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -53,23 +50,18 @@ export function WorkspaceSidebar({
           <SidebarMenu>
             <SidebarMenuActiveBtn
               href={`/workspace/${workspaceId}`}
-              title="Dashboard"
+              title="Volk"
               icon={<Home className="h-4 w-4" />}
             />
             <SidebarMenuActiveBtn
-              href={`/workspace/${workspaceId}/calendar`}
-              title="Kalender"
-              icon={<Calendar className="h-4 w-4" />}
+              href={`/workspace/${workspaceId}/devices`}
+              title="Anlage"
+              icon={<Video className="h-4 w-4" />}
             />
             <SidebarMenuActiveBtn
-              href={`/workspace/${workspaceId}/bookings`}
-              title="Buchungen"
-              icon={<FileText className="h-4 w-4" />}
-            />
-            <SidebarMenuActiveBtn
-              href={`/workspace/${workspaceId}/resources`}
-              title="Ressourcen"
-              icon={<Briefcase className="h-4 w-4" />}
+              href={`/workspace/${workspaceId}/alerts`}
+              title="Alerts"
+              icon={<BellRing className="h-4 w-4" />}
             />
           </SidebarMenu>
         </SidebarGroup>
@@ -87,7 +79,7 @@ export function WorkspaceSidebar({
           </SidebarMenu>
         </SidebarGroup>
 
-        {isSuperAdmin && (
+        {showSuperadmin && (
           <SidebarGroup>
             <SidebarGroupLabel>Superadmin</SidebarGroupLabel>
             <SidebarMenu>
