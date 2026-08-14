@@ -1,5 +1,5 @@
 import { apiService } from "./api.service";
-import { ApiException } from "./api-config";
+import { ApiException, API_CONFIG } from "./api-config";
 import { toast } from "sonner";
 
 export interface LoginCredentials {
@@ -398,7 +398,7 @@ class AuthService {
    */
   public initiateGoogleLogin(): void {
     if (typeof window === "undefined") return;
-    window.location.href = `http://localhost:8081/api/auth/google`;
+    window.location.href = `${API_CONFIG.BASE_URL}/auth/google`;
   }
 
   /**
