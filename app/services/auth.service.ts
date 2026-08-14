@@ -398,7 +398,7 @@ class AuthService {
    */
   public initiateGoogleLogin(): void {
     if (typeof window === "undefined") return;
-    window.location.href = `${API_CONFIG.BASE_URL}/api/auth/google`;
+    window.location.href = `${API_CONFIG.BASE_URL}/auth/google`;
   }
 
   /**
