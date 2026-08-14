@@ -64,7 +64,19 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref,
   ) => {
     const Comp = asChild ? Slot : "button";
-    const ButtonElement = (
+    // asChild delegiert das Rendern an ein einzelnes Kind-Element (Radix Slot) —
+    // das verlangt zwingend genau ein Element-Kind, sonst wirft Slot
+    // "React.Children.only". Der Loading-Spinner darf hier also nicht als
+    // zweites Kind angehängt werden.
+    const ButtonElement = asChild ? (
+      <Comp
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        {...props}
+      >
+        {children}
+      </Comp>
+    ) : (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
